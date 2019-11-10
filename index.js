@@ -6,6 +6,8 @@ const express = require('express');
 const hbs = require('hbs');
 //use bodyParser middleware
 const bodyParser = require('body-parser');
+
+const multer = require('multer');
 //use mysql database
 const mysql = require('mysql');
 const app = express();
@@ -33,6 +35,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 //set folder public as static folder for static file
 app.use('/assets',express.static(__dirname + '/public'));
+const storage = multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, './');
+  },
+  filename: function (req, file, callback) {
+    callback(null, file.fieldname + '-' + Date.now() + '.' + mime.extension(file.mimetype));
+  }
+});
+const upload = multer({ storage : storage }).array('userPic');
 
 //route for homepage
 app.get('/',(req, res) => {
@@ -47,7 +58,7 @@ app.get('/',(req, res) => {
 
 //route for insert data
 app.post('/save',(req, res) => {
-  let data = {product_name: req.body.product_name, product_price: req.body.product_price};
+  let data = {product_name: req.body.product_name, product_price: req.body.product_price,path :req.userPic};
   let sql = "INSERT INTO product SET ?";
   let query = conn.query(sql, data,(err, results) => {
     if(err) throw err;
