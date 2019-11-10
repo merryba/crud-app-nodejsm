@@ -13,7 +13,7 @@ const app = express();
 //Create Connection
 const conn = mysql.createConnection({
   host: 'us-iron-auto-dca-05-b.cleardb.net',
-  user: 'baa26e88cf9895,
+  user: 'baa26e88cf9895',
   password: '7c9a2eb7',
   database: 'heroku_91a42d1f73b62f7'
 });
