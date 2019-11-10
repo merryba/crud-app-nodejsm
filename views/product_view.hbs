@@ -15,6 +15,7 @@
           <th>Product Name</th>
           <th>Price</th>
           <th>Action</th>
+          <th>Image</th>
         </tr>
       </thead>
       <tbody>
@@ -23,7 +24,7 @@
           <td>{{ product_id }}</td>
           <td>{{ product_name }}</td>
           <td>{{ product_price }}</td>
-         
+         <td> <img alt="User Pic" src="/images/upload_images/{{path}}"/> </td>
         </tr>
         {{/each}}
       </tbody>
@@ -49,6 +50,8 @@
                <div class="form-group">
                    <input type="text" name="product_price" class="form-control" placeholder="Price" required>
                </div>
+               <div class="form-group">
+                 <input type="file" name="userPic">
              </div>
              <div class="modal-footer">
                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
