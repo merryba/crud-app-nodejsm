@@ -11,6 +11,8 @@ const multer = require('multer');
 //use mysql database
 const mysql = require('mysql');
 const app = express();
+
+const mime    =   require('mime');
 const port =process.env.PORT || 8000;
 
 //Create Connection
@@ -37,7 +39,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/assets',express.static(__dirname + '/public'));
 const storage = multer.diskStorage({
   destination: function (req, file, callback) {
-    callback(null, './');
+    callback(null, './uploads');
   },
   filename: function (req, file, callback) {
     callback(null, file.fieldname + '-' + Date.now() + '.' + mime.extension(file.mimetype));
