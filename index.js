@@ -11,6 +11,7 @@ const multer = require('multer');
 //use mysql database
 const mysql = require('mysql');
 const app = express();
+const fs = require('fs-extra');
 
 const mime    =   require('mime');
 const port =process.env.PORT || 8000;
