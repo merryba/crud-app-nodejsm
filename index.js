@@ -37,9 +37,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 //set folder public as static folder for static file
 app.use('/assets',express.static(__dirname + '/public'));
+let UPLOAD_LOCATION = path.join(__dirname, 'uploads');
+fs.mkdirsSync(UPLOAD_LOCATION); 
 const storage = multer.diskStorage({
   destination: function (req, file, callback) {
-    callback(null, './uploads');
+    callback(null, UPLOAD_LOCATION);
   },
   filename: function (req, file, callback) {
     callback(null, file.fieldname + '-' + Date.now() + '.' + mime.extension(file.mimetype));
