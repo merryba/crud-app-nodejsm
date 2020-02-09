@@ -33,6 +33,19 @@ conn.connect((err) =>{
   console.log('Mysql Connected...');
 });
 
+let UPLOAD_LOCATION = path.join(__dirname, 'images');
+fs.mkdirsSync(UPLOAD_LOCATION); 
+const storage = multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, UPLOAD_LOCATION);
+  },
+  filename: function (req, file, callback) {
+    callback(null, file.fieldname + '-' + Date.now() + '.' + mime.extension(file.mimetype));
+  }
+});
+
+let upload = multer({storage: storage});
+
 //set views file
 app.set('views',path.join(__dirname,'views'));
 //set view engine
@@ -58,18 +71,7 @@ app.post('/save',upload.single('userPic'),(req, res) => {
 
 
 
-let UPLOAD_LOCATION = path.join(__dirname, 'images');
-fs.mkdirsSync(UPLOAD_LOCATION); 
-const storage = multer.diskStorage({
-  destination: function (req, file, callback) {
-    callback(null, UPLOAD_LOCATION);
-  },
-  filename: function (req, file, callback) {
-    callback(null, file.fieldname + '-' + Date.now() + '.' + mime.extension(file.mimetype));
-  }
-});
 
-let upload = multer({storage: storage});
 //const upload = multer({ storage : storage }).array('userPic');
 winston.log('info', 'Hello log files!', {
   path: req.file.filename, product_name: req.body.product_name, product_price: req.body
