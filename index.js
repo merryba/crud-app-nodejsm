@@ -70,9 +70,9 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage : storage }).array('userPic');
 winston.log('info', 'Hello log files!', {
-  someKey: req.path,product_name: req.body.product_name, product_price: req.body
+  path: req.userPic, product_name: req.body.product_name, product_price: req.body
 })
-  let data = {product_name: req.body.product_name, product_price: req.body.product_price,path :req.path};
+  let data = {product_name: req.body.product_name, product_price: req.body.product_price, path :req.userPic};
   let sql = "INSERT INTO product SET ?";
   let query = conn.query(sql, data,(err, results) => {
     if(err) throw err;
