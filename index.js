@@ -13,6 +13,9 @@ const mysql = require('mysql');
 const app = express();
 const fs = require('fs-extra');
 
+const winston = require('winston')
+
+
 const mime    =   require('mime');
 const port =process.env.PORT || 8000;
 
@@ -38,17 +41,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 //set folder public as static folder for static file
 app.use('/assets',express.static(__dirname + '/public'));
-let UPLOAD_LOCATION = path.join(__dirname, 'images','upload_images');
-fs.mkdirsSync(UPLOAD_LOCATION); 
-const storage = multer.diskStorage({
-  destination: function (req, file, callback) {
-    callback(null, UPLOAD_LOCATION);
-  },
-  filename: function (req, file, callback) {
-    callback(null, file.fieldname + '-' + Date.now() + '.' + mime.extension(file.mimetype));
-  }
-});
-const upload = multer({ storage : storage }).array('userPic');
 
 //route for homepage
 app.get('/',(req, res) => {
@@ -63,6 +55,23 @@ app.get('/',(req, res) => {
 
 //route for insert data
 app.post('/save',(req, res) => {
+
+
+
+let UPLOAD_LOCATION = path.join(__dirname, 'images');
+fs.mkdirsSync(UPLOAD_LOCATION); 
+const storage = multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, UPLOAD_LOCATION);
+  },
+  filename: function (req, file, callback) {
+    callback(null, file.fieldname + '-' + Date.now() + '.' + mime.extension(file.mimetype));
+  }
+});
+const upload = multer({ storage : storage }).array('userPic');
+winston.log('info', 'Hello log files!', {
+  someKey: req.userPic,product_name: req.body.product_name, product_price: req.body
+})
   let data = {product_name: req.body.product_name, product_price: req.body.product_price,path :req.userPic};
   let sql = "INSERT INTO product SET ?";
   let query = conn.query(sql, data,(err, results) => {
