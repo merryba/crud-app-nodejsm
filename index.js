@@ -73,9 +73,9 @@ app.post('/save',upload.single('userPic'),(req, res) => {
 
 
 //const upload = multer({ storage : storage }).array('userPic');
-winston.log('info', 'Hello log files!', {
-  path: req.file.filename, product_name: req.body.product_name, product_price: req.body
-})
+//winston.log('info', 'Hello log files!', {
+//  path: req.file.filename, product_name: req.body.product_name, product_price: req.body
+//})
 var imageData = fs.readFileSync(req.file.path);
   let data = {product_name: req.body.product_name, product_price: req.body.product_price, image :imageData};
   let sql = "INSERT INTO product SET ?";
