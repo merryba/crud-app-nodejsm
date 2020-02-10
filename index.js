@@ -12,6 +12,7 @@ const multer = require('multer');
 const mysql = require('mysql');
 const app = express();
 const fs = require('fs-extra');
+const winston = require('winston');
 
 const mime    =   require('mime');
 const port =process.env.PORT || 8000;
