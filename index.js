@@ -39,7 +39,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 //set folder public as static folder for static file
 app.use('/assets',express.static(__dirname + '/public'));
-let UPLOAD_LOCATION = path.join(__dirname, 'images');
+let UPLOAD_LOCATION = path.join(__dirname,'public', 'images');
 fs.mkdirsSync(UPLOAD_LOCATION); 
 const storage = multer.diskStorage({
   destination: function (req, file, callback) {
@@ -66,7 +66,7 @@ app.get('/',(req, res) => {
 app.post('/save',(req, res) => {
     winston.log('info', 'Hello log files!', {
   path: req.file.filename, product_name: req.body.product_name, product_price: req.body
-})
+});
   let data = {product_name: req.body.product_name, product_price: req.body.product_price,path :req.userPic};
   let sql = "INSERT INTO product SET ?";
   let query = conn.query(sql, data,(err, results) => {
