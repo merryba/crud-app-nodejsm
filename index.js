@@ -13,9 +13,6 @@ const mysql = require('mysql');
 const app = express();
 const fs = require('fs-extra');
 
-const winston = require('winston')
-
-
 const mime    =   require('mime');
 const port =process.env.PORT || 8000;
 
@@ -33,6 +30,14 @@ conn.connect((err) =>{
   console.log('Mysql Connected...');
 });
 
+//set views file
+app.set('views',path.join(__dirname,'views'));
+//set view engine
+app.set('view engine', 'hbs');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+//set folder public as static folder for static file
+app.use('/assets',express.static(__dirname + '/public'));
 let UPLOAD_LOCATION = path.join(__dirname, 'images');
 fs.mkdirsSync(UPLOAD_LOCATION); 
 const storage = multer.diskStorage({
@@ -43,17 +48,7 @@ const storage = multer.diskStorage({
     callback(null, file.fieldname + '-' + Date.now() + '.' + mime.extension(file.mimetype));
   }
 });
-
-let upload = multer({storage: storage});
-
-//set views file
-app.set('views',path.join(__dirname,'views'));
-//set view engine
-app.set('view engine', 'hbs');
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-//set folder public as static folder for static file
-app.use('/assets',express.static(__dirname + '/public'));
+const upload = multer({ storage : storage }).array('userPic');
 
 //route for homepage
 app.get('/',(req, res) => {
@@ -67,16 +62,8 @@ app.get('/',(req, res) => {
 });
 
 //route for insert data
-app.post('/save',upload.single('userPic'),(req, res) => {
-
-
-
-
-//const upload = multer({ storage : storage }).array('userPic');
-winston.log('info', 'Hello log files!', {
-  path: req.file.filename, product_name: req.body.product_name, product_price: req.body
-})
-  let data = {product_name: req.body.product_name, product_price: req.body.product_price, path :req.file.filename};
+app.post('/save',(req, res) => {
+  let data = {product_name: req.body.product_name, product_price: req.body.product_price,path :req.userPic};
   let sql = "INSERT INTO product SET ?";
   let query = conn.query(sql, data,(err, results) => {
     if(err) throw err;
