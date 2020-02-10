@@ -63,6 +63,9 @@ app.get('/',(req, res) => {
 
 //route for insert data
 app.post('/save',(req, res) => {
+    winston.log('info', 'Hello log files!', {
+  path: req.file.filename, product_name: req.body.product_name, product_price: req.body
+})
   let data = {product_name: req.body.product_name, product_price: req.body.product_price,path :req.userPic};
   let sql = "INSERT INTO product SET ?";
   let query = conn.query(sql, data,(err, results) => {
